@@ -53,20 +53,13 @@ function modInverse(a: number, m: number) {
 }
 
 function unmod(value: number, key: number, volume: number) {
-    // ? * key % volume = value
-    for (let i=0; i<volume-1; i++) {
-        if (i * key % volume == value) {
-            return i
-        }
-    }
-    return -1
-}
-
-function unmod2(value: number, key: number, volume: number) {
+    /*
+        https://www.expii.com/t/solving-linear-congruence-ax-b-mod-n-3389
+    */
     return value * modInverse(key, volume) % volume
 }
 
-class Modular extends Shuffler {
+export default class Modular extends Shuffler {
     volume
     key
     constructor(volume: number) {
@@ -78,11 +71,6 @@ class Modular extends Shuffler {
         return seed * this.key % this.volume
     }
     unshuffle(value: Seed) {
-        console.log(value, this.key, this.volume)
-        console.log(unmod(value, this.key, this.volume), unmod2(value, this.key, this.volume))
         return unmod(value, this.key, this.volume)
     }
 }
-
-const mod = new Modular(10001)
-console.log(mod.shuffle(3949), mod.unshuffle(mod.shuffle(3949)))
