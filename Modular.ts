@@ -34,6 +34,24 @@ function getRandCoprime(n: number): number {
     }
 }
 
+function modInverse(a: number, m: number) {
+    /*
+        https://stackoverflow.com/a/51562038
+    */
+    a = (a % m + m) % m
+    const s = []
+    let b = m
+    while (b) {
+        [a, b] = [b, a % b]
+        s.push({a, b})
+    }
+    let x = 1, y = 0
+    for (let i = s.length-2; i >= 0; --i) {
+        [x, y] = [y,  x - y * Math.floor(s[i].a / s[i].b)]
+    }
+    return (y % m + m) % m
+}
+
 function unmod(value: number, key: number, volume: number) {
     // ? * key % volume = value
     for (let i=0; i<volume-1; i++) {
@@ -42,6 +60,10 @@ function unmod(value: number, key: number, volume: number) {
         }
     }
     return -1
+}
+
+function unmod2(value: number, key: number, volume: number) {
+    return value * modInverse(key, volume) % volume
 }
 
 class Modular extends Shuffler {
@@ -56,6 +78,8 @@ class Modular extends Shuffler {
         return seed * this.key % this.volume
     }
     unshuffle(value: Seed) {
+        console.log(value, this.key, this.volume)
+        console.log(unmod(value, this.key, this.volume), unmod2(value, this.key, this.volume))
         return unmod(value, this.key, this.volume)
     }
 }
