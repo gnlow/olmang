@@ -68,9 +68,9 @@ export default class Modular extends Shuffler {
         this.key = getRandCoprime(volume)
     }
     shuffle(seed: Seed) {
-        return seed * this.key % this.volume
+        return (seed + 3) * this.key % this.volume
     }
     unshuffle(value: Seed) {
-        return unmod(value, this.key, this.volume)
+        return unmod(value, this.key, this.volume) - 3
     }
 }
